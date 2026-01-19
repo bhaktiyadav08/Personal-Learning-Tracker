@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Learning Tracker</title>
+    <style>
+        :root {
+            --primary: #4361ee;
+            --secondary: #3a0ca3;
+            --success: #4cc9f0;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --gray: #6c757d;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        /* Header Styles */
+        header {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .header-content h1 {
+            color: var(--primary);
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        
+        .stat-card {
+            background: var(--light);
+            padding: 1rem;
+            border-radius: 10px;
+            text-align: center;
+        }
+        
+        .stat-card h3 {
+            font-size: 2rem;
+            color: var(--primary);
+        }
+        
+        /* Main Dashboard */
+        .dashboard {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        .card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+        }
+        
+        .card h2 {
+            color: var(--secondary);
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--success);
+        }
+        
+        /* Skills Section */
+        .skills-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        
+        .skill-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            position: relative;
+        }
+        
+        .skill-progress {
+            background: rgba(255,255,255,0.2);
+            height: 8px;
+            border-radius: 4px;
+            margin-top: 0.5rem;
+            overflow: hidden;
+        }
+        
+        .progress-bar {
+            background: white;
+            height: 100%;
+            border-radius: 4px;
+            width: 0%;
+            transition: width 1s ease-in-out;
+        }
+        
+        /* Habit Tracker */
+        .habit-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 5px;
+            margin-top: 1rem;
+        }
+        
+        .habit-day {
+            aspect-ratio: 1;
+            border: 2px solid var(--primary);
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .habit-day.completed {
+            background: var(--success);
+            border-color: var(--success);
+        }
+        
+        /* Forms */
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        
+        input, select, textarea {
+            width: 100%;
+            padding: 0.8rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+        
+        button {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: transform 0.2s;
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+            background: var(--secondary);
+        }
+        
+        /* Task List */
+        .task-list {
+            list-style: none;
+        }
+        
+        .task-item {
+            padding: 1rem;
+            background: var(--light);
+            margin-bottom: 0.5rem;
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .task-item.completed {
+            opacity: 0.6;
+            text-decoration: line-through;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .dashboard {
+                grid-template-columns: 1fr;
+            }
+            
+            .stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .header-content h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header>
+            <div class="header-content">
+                <h1>📚 My Learning Tracker</h1>
+                <p>Track your progress, stay motivated, achieve your goals</p>
+                <div class="stats">
+                    <div class="stat-card">
+                        <h3 id="total-hours">0</h3>
+                        <p>Total Hours</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3 id="skills-count">0</h3>
+                        <p>Skills</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3 id="streak-days">0</h3>
+                        <p>Day Streak</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3 id="completed-tasks">0</h3>
+                        <p>Tasks Done</p>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Dashboard -->
+        <div class="dashboard">
+            <!-- Left Column -->
+            <div class="main-content">
+                <!-- Active Goals -->
+                <div class="card" style="margin-bottom: 2rem;">
+                    <h2>🎯 Active Learning Goals</h2>
+                    <div id="goals-list">
+                        <!-- Goals will be added here dynamically -->
+                        <div class="task-item">
+                            <div>
+                                <strong>Learn JavaScript Fundamentals</strong>
+                                <p>Complete Codecademy course by Dec 31</p>
+                                <div class="skill-progress">
+                                    <div class="progress-bar" style="width: 45%"></div>
+                                </div>
+                            </div>
+                            <button onclick="markGoalComplete(this)">✓</button>
+                        </div>
+                    </div>
+                    <div class="form-group" style="margin-top: 1rem;">
+                        <input type="text" id="new-goal" placeholder="Add a new learning goal...">
+                        <button onclick="addNewGoal()" style="margin-top: 0.5rem;">Add Goal</button>
+                    </div>
+                </div>
+
+                <!-- Skills Progress -->
+                <div class="card">
+                    <h2>📊 Skills Progress</h2>
+                    <div class="skills-container" id="skills-container">
+                        <!-- Skills will be added here -->
+                        <div class="skill-card">
+                            <h3>JavaScript</h3>
+                            <p>45% Complete</p>
+                            <div class="skill-progress">
+                                <div class="progress-bar" data-progress="45"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <button onclick="addSkillModal()" style="margin-top: 1rem;">+ Add Skill</button>
+                </div>
+            </div>
+
+            <!-- Right Column -->
+            <div class="sidebar">
+                <!-- Today's Tasks -->
+                <div class="card" style="margin-bottom: 2rem;">
+                    <h2>✅ Today's Tasks</h2>
+                    <ul class="task-list" id="today-tasks">
+                        <li class="task-item">
+                            <span>Complete JS Functions module</span>
+                            <input type="checkbox" onclick="updateCompletedTasks()">
+                        </li>
+                        <li class="task-item">
+                            <span>Practice coding challenges (30min)</span>
+                            <input type="checkbox" onclick="updateCompletedTasks()">
+                        </li>
+                    </ul>
+                    <div class="form-group">
+                        <input type="text" id="new-task" placeholder="Add task for today...">
+                        <button onclick="addTask()">Add Task</button>
+                    </div>
+                </div>
+
+                <!-- Daily Habit Tracker -->
+                <div class="card">
+                    <h2>🔥 Learning Streak</h2>
+                    <div class="habit-grid" id="streak-tracker">
+                        <!-- Days will be populated by JavaScript -->
+                    </div>
+                    <p style="margin-top: 1rem; text-align: center;">
+                        Current streak: <strong id="current-streak">0</strong> days
+                    </p>
+                </div>
+
+                <!-- Time Tracker -->
+                <div class="card" style="margin-top: 2rem;">
+                    <h2>⏱️ Time Tracker</h2>
+                    <div style="text-align: center; padding: 1rem;">
+                        <div style="font-size: 3rem; color: var(--primary);" id="study-timer">00:00:00</div>
+                        <button onclick="startTimer()" id="timer-btn" style="margin-top: 1rem;">Start Studying</button>
+                    </div>
+                    <input type="text" id="study-session-topic" placeholder="What are you studying?" style="margin-top: 1rem;">
+                </div>
+            </div>
+        </div>
+
+        <!-- Add Skill Modal -->
+        <div id="skill-modal" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center;">
+            <div class="card" style="max-width: 500px; width: 90%;">
+                <h2>Add New Skill</h2>
+                <div class="form-group">
+                    <input type="text" id="skill-name" placeholder="Skill name">
+                </div>
+                <div class="form-group">
+                    <label>Current level (0-100%)</label>
+                    <input type="range" id="skill-level" min="0" max="100" value="0">
+                    <span id="level-display">0%</span>
+                </div>
+                <div style="display: flex; gap: 1rem; margin-top: 1rem;">
+                    <button onclick="saveSkill()">Save Skill</button>
+                    <button onclick="closeModal()" style="background: var(--gray);">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="script.js">
+ </script>
+</body>
+</html>
